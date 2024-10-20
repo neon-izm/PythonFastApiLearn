@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+sqlalchemy
+pydantic
+pymysql
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+python-multipart
+bcrypt==3.2.0 # for compatibility with passlib https://github.com/pyca/bcrypt/issues/684
