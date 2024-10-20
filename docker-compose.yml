@@ -12,11 +12,13 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
+    networks:
+      - app-network
 
   backend:
     build: ./backend
     environment:
-      DATABASE_URL: mysql+mysqlconnector://user:password@db/todo_db
+      DATABASE_URL: mysql+pymysql://user:password@db/todo_db
       SECRET_KEY: your_secret_key
     volumes:
       - ./backend/app:/app/app
@@ -24,6 +26,8 @@ services:
       - "8000:8000"
     depends_on:
       - db
+    networks:
+      - app-network
 
   frontend:
     build: ./frontend
@@ -33,6 +37,12 @@ services:
       - "8501:8501"
     depends_on:
       - backend
+    networks:
+      - app-network
 
 volumes:
   db_data:
+
+networks:
+  app-network:
+    driver: bridge

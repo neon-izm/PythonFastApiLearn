@@ -1,8 +1,16 @@
 from pydantic import BaseModel
+from typing import List, Optional
+
+class Token(BaseModel):
+    access_token: str
+    token_type: str
+
+class TokenData(BaseModel):
+    email: Optional[str] = None
 
 class TodoBase(BaseModel):
     title: str
-    description: str = None
+    description: Optional[str] = None
 
 class TodoCreate(TodoBase):
     pass
@@ -23,7 +31,7 @@ class UserCreate(UserBase):
 
 class User(UserBase):
     id: int
-    todos: list[Todo] = []
+    todos: List['Todo'] = []
 
     class Config:
         orm_mode = True
