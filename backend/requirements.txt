@@ -1,7 +1,7 @@
 fastapi
 uvicorn[standard]
 sqlalchemy
-pydantic==1.10.7
+pydantic
 pymysql
 python-jose[cryptography]
 passlib[bcrypt]
