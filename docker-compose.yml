@@ -12,8 +12,11 @@ services:
       - db_data:/var/lib/mysql
     ports:
       - "3306:3306"
-    networks:
-      - app-network
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "--silent"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
 
   backend:
     build: ./backend
@@ -25,9 +28,8 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
-    networks:
-      - app-network
+      db:
+        condition: service_healthy
 
   frontend:
     build: ./frontend
@@ -37,12 +39,6 @@ services:
       - "8501:8501"
     depends_on:
       - backend
-    networks:
-      - app-network
 
 volumes:
   db_data:
-
-networks:
-  app-network:
-    driver: bridge
