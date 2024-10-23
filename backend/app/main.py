@@ -1,8 +1,6 @@
-from fastapi import FastAPI, Depends, HTTPException, status
-from app.routers import users, todos
-from app import auth, schemas, models, database
-from sqlalchemy.orm import Session
-from pydantic import BaseModel
+from fastapi import FastAPI
+from app.routers import users, todos, auth_routes
+from app import models, database
 import logging
 
 logging.basicConfig(level=logging.DEBUG)
@@ -21,37 +19,10 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# ルーターの登録
 app.include_router(users.router)
 app.include_router(todos.router)
+app.include_router(auth_routes.router) 
 
 # データベースの初期化
 models.Base.metadata.create_all(bind=database.engine)
-
-# ログイン用のリクエストボディスキーマを定義
-class LoginRequest(BaseModel):
-    email: str
-    password: str
-
-@app.post("/token", response_model=schemas.Token)
-def login(login_request: LoginRequest, db: Session = Depends(database.get_db)):
-    email = login_request.email
-    password = login_request.password
-    logger.debug(f"Login attempt for user: {email}")
-    user = db.query(models.User).filter(models.User.email == email).first()
-    if not user:
-        logger.debug("User not found.")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="メールアドレスまたはパスワードが正しくありません",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    if not auth.verify_password(password, user.hashed_password):
-        logger.debug("Password verification failed.")
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="メールアドレスまたはパスワードが正しくありません2",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
-    logger.debug("Authentication successful.")
-    access_token = auth.create_access_token(data={"sub": user.email})
-    return {"access_token": access_token, "token_type": "bearer"}
