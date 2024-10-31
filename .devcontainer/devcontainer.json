@@ -1,5 +1,5 @@
 {
-  "name": "Todo App Development Environment",
+  "name": "FastAPI Development Environment",
   "dockerComposeFile": [
     "../docker-compose.yml"
   ],
@@ -8,20 +8,21 @@
   "extensions": [
     "ms-python.python",
     "ms-python.vscode-pylance",
-    "ms-python.black-formatter",
     "ms-azuretools.vscode-docker",
-    "eamodio.gitlens"
+    "eamodio.gitlens",
+    "ms-python.black-formatter"
   ],
-  "settings": {
-    "python.defaultInterpreterPath": "/usr/local/bin/python",
-    "python.linting.enabled": true,
-    "python.linting.pylintEnabled": true,
-    "python.formatting.provider": "black",
-    "python.formatting.blackArgs": [
-      "--line-length",
-      "88"
-    ],
-    "python.analysis.typeCheckingMode": "basic"
+  "customizations": {
+    "vscode": {
+      "settings": {
+        "python.defaultInterpreterPath": "/usr/local/bin/python",
+        "python.linting.enabled": true,
+        "python.linting.pylintEnabled": true,
+        "python.formatting.provider": "black",
+        "python.formatting.blackArgs": ["--line-length", "88"],
+        "python.analysis.typeCheckingMode": "basic"
+      }
+    }
   },
   "postCreateCommand": "pip install --upgrade pip && pip install -r ./backend/requirements.txt",
   "mounts": [
