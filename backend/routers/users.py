@@ -1,11 +1,8 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
-from app import schemas, crud, models,auth
-from app.database import SessionLocal, get_db
-import logging
 
-from app import database
-from app.routers import auth_routes
+from .. import models, auth, schemas, database  # Consolidated import
+import logging
 
 
 logger = logging.getLogger(__name__)

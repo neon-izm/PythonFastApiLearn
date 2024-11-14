@@ -1,7 +1,7 @@
 {
-  "name": "FastAPI Development Environment",
+  "name": "Backend Development Environment",
   "dockerComposeFile": [
-    "../docker-compose.yml"
+    "../../docker-compose.yml"
   ],
   "service": "backend",
   "workspaceFolder": "/workspace",
@@ -24,7 +24,7 @@
       }
     }
   },
-  "postCreateCommand": "pip install --upgrade pip && pip install -r ./backend/requirements.txt",
+  "postCreateCommand": "pip install --no-cache-dir -r backend/requirements.txt",
   "mounts": [
     "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
   ],

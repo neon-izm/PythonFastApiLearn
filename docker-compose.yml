@@ -10,6 +10,8 @@ services:
       MYSQL_ROOT_PASSWORD: root_password
     volumes:
       - db_data:/var/lib/mysql
+    networks:
+      - app-network
     ports:
       - "3306:3306"
     healthcheck:
@@ -19,12 +21,16 @@ services:
       retries: 5
 
   backend:
-    build: ./backend
+    build:
+      context: .
+      dockerfile: backend/Dockerfile.fastapi
     environment:
       DATABASE_URL: mysql+pymysql://user:password@db/todo_db
       SECRET_KEY: your_secret_key
     volumes:
-      - ./backend/app:/app/app
+      - .:/workspace:consistent
+    networks:
+      - app-network
     ports:
       - "8000:8000"
     depends_on:
@@ -32,9 +38,13 @@ services:
         condition: service_healthy
 
   frontend:
-    build: ./frontend
+    build:
+      context: .
+      dockerfile: frontend/Dockerfile.streamlit
     volumes:
-      - ./frontend:/app
+      - .:/workspace:consistent
+    networks:
+      - app-network
     ports:
       - "8501:8501"
     depends_on:
@@ -42,3 +52,7 @@ services:
 
 volumes:
   db_data:
+
+networks:
+  app-network:
+    driver: bridge
