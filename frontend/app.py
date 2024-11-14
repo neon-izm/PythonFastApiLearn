@@ -87,6 +87,39 @@ def api_request(method: str, endpoint: str, **kwargs):
         response = requests.request(method, url, headers=headers, **kwargs)
     return response
 
+def handle_authenticated_session():
+    st.title("ToDoアプリ")
+    st.write(f"ようこそ、{st.session_state['user_email']} さん")
+
+    # ToDoの一覧を取得
+    if st.button("ToDoを取得"):
+        response = api_request("GET", "/todos/")
+        if response.status_code == 200:
+            todos = response.json()
+            if todos:
+                st.write("あなたのToDoリスト：")
+                for todo in todos:
+                    st.write(f"- {todo['title']}")
+            else:
+                st.write("ToDoがありません")
+        else:
+            st.error("ToDoの取得に失敗しました")
+
+    # ToDoの追加
+    new_todo = st.text_input("新しいToDoを入力", key="new_todo")
+    submit_todo = st.button("ToDoを追加")
+    if submit_todo and new_todo:
+        response = api_request("POST", "/todos/", json={"title": new_todo})
+        if response.status_code == 200:
+            st.success("ToDoを追加しました")
+            del st.session_state['new_todo']  # Clear the input after successful addition
+        else:
+            st.error("ToDoの追加に失敗しました")
+
+            # ログアウト
+            if st.button("ログアウト"):
+                logout()
+
 # メイン処理
 def main():
     if st.session_state['access_token'] is None:
@@ -95,48 +128,24 @@ def main():
         tab1, tab2 = st.tabs(["ログイン", "ユーザー登録"])
 
         with tab1:
-            st.text_input("メールアドレス", key="login_email")
-            st.text_input("パスワード", type="password", key="login_password")
-            st.button("ログイン", on_click=login)
+            with st.form("login_form"):
+                st.text_input("メールアドレス", key="login_email")
+                st.text_input("パスワード", type="password", key="login_password")
+                submitted = st.form_submit_button("ログイン")
+                if submitted:
+                    login()
 
         with tab2:
-            st.text_input("メールアドレス", key="reg_email")
-            st.text_input("パスワード", type="password", key="reg_password")
-            st.button("ユーザー登録", on_click=register)
+            with st.form("register_form"):
+                st.text_input("メールアドレス", key="reg_email")
+                st.text_input("パスワード", type="password", key="reg_password")
+                submitted = st.form_submit_button("ユーザー登録")
+                if submitted:
+                    register()
     else:
-        st.title("ToDoアプリ")
-        st.write(f"ようこそ、{st.session_state['user_email']} さん")
+        # The rest of your authenticated session handling
+        handle_authenticated_session()
 
-        # ToDoの一覧を取得
-        if st.button("ToDoを取得"):
-            response = api_request("GET", "/todos/")
-            if response.status_code == 200:
-                todos = response.json()
-                if todos:
-                    st.write("あなたのToDoリスト：")
-                    for todo in todos:
-                        st.write(f"- {todo['title']}")
-                else:
-                    st.write("ToDoがありません")
-            else:
-                st.error("ToDoの取得に失敗しました")
-
-        # ToDoの追加
-        new_todo = st.text_input("新しいToDoを入力", key="new_todo")
-        if st.button("ToDoを追加"):
-            if new_todo:
-                response = api_request("POST", "/todos/", json={"title": new_todo})
-                if response.status_code == 200:
-                    st.success("ToDoを追加しました")
-                    st.session_state['new_todo'] = ""  # 入力欄をクリア
-                else:
-                    st.error("ToDoの追加に失敗しました")
-            else:
-                st.warning("ToDoを入力してください")
-
-        # ログアウト
-        if st.button("ログアウト"):
-            logout()
 
 if __name__ == "__main__":
     main()
