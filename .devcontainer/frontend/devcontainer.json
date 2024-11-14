@@ -24,7 +24,7 @@
         }
       }
     },
-    "postCreateCommand": "pip install --no-cache-dir -r .devcontainer/frontend/requirements.txt",
+    "postCreateCommand": "pip install --no-cache-dir -r frontend/requirements.txt",
     "mounts": [
       "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
     ],

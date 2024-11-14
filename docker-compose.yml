@@ -23,7 +23,7 @@ services:
   backend:
     build:
       context: .
-      dockerfile: .devcontainer/backend/Dockerfile.fastapi
+      dockerfile: backend/Dockerfile.fastapi
     environment:
       DATABASE_URL: mysql+pymysql://user:password@db/todo_db
       SECRET_KEY: your_secret_key
@@ -40,7 +40,7 @@ services:
   frontend:
     build:
       context: .
-      dockerfile: .devcontainer/frontend/Dockerfile.streamlit
+      dockerfile: frontend/Dockerfile.streamlit
     volumes:
       - .:/workspace:consistent
     networks:

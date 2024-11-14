@@ -2,7 +2,7 @@ FROM python:3.10.1
 
 WORKDIR /workspace
 
-COPY .devcontainer/frontend/requirements.txt /tmp/requirements.txt
+COPY frontend/requirements.txt /tmp/requirements.txt
 
 RUN pip install --no-cache-dir --upgrade -r /tmp/requirements.txt
 
