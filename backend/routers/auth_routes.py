@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from app import schemas, models, auth
-from app.database import get_db
+from .. import schemas, models, auth
+from ..database import get_db
 from fastapi.security import OAuth2PasswordRequestForm, OAuth2PasswordBearer
 from pydantic import BaseModel
 import logging
@@ -37,6 +37,7 @@ def login_json(
         raise credentials_exception
     access_token = auth.create_access_token(data={"sub": user.email})
     refresh_token = auth.create_refresh_token(data={"sub": user.email})
+    print(f"access_token: {access_token}")
     return {
         "access_token": access_token,
         "token_type": "bearer",

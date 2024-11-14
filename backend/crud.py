@@ -1,5 +1,5 @@
 from sqlalchemy.orm import Session
-from app import models, schemas, auth
+from . import models, schemas, auth
 import logging
 
 logger = logging.getLogger(__name__)

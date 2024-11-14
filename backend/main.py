@@ -1,15 +1,15 @@
 from fastapi import FastAPI
-from app.routers import users, todos, auth_routes
-from app import models, database
+from .routers import users, todos, auth_routes
+from . import models, database
 import logging
-
+# CORS設定の追加
+from fastapi.middleware.cors import CORSMiddleware
 logging.basicConfig(level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 app = FastAPI()
 
-# CORS設定の追加
-from fastapi.middleware.cors import CORSMiddleware
+
 
 app.add_middleware(
     CORSMiddleware,

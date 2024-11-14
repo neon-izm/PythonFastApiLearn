@@ -1,0 +1,33 @@
+{
+    "name": "Frontend Development Environment",
+    "dockerComposeFile": [
+      "../../docker-compose.yml"
+    ],
+    "service": "frontend",
+    "workspaceFolder": "/workspace",
+    "extensions": [
+      "ms-python.python",
+      "ms-python.vscode-pylance",
+      "ms-azuretools.vscode-docker",
+      "eamodio.gitlens",
+      "ms-python.black-formatter"
+    ],
+    "customizations": {
+      "vscode": {
+        "settings": {
+          "python.defaultInterpreterPath": "/usr/local/bin/python",
+          "python.linting.enabled": true,
+          "python.linting.pylintEnabled": true,
+          "python.formatting.provider": "black",
+          "python.formatting.blackArgs": ["--line-length", "88"],
+          "python.analysis.typeCheckingMode": "basic"
+        }
+      }
+    },
+    "postCreateCommand": "pip install --no-cache-dir -r .devcontainer/frontend/requirements.txt",
+    "mounts": [
+      "source=${localWorkspaceFolder},target=/workspace,type=bind,consistency=cached"
+    ],
+    "forwardPorts": [8000,8501]
+  }
+  
